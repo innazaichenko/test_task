@@ -8,21 +8,21 @@ export default defineConfig({
   reporter: 'html',
   use: {
     trace: 'on-first-retry',
-    channel: "chrome",
+    baseURL: 'https://makeup.com.ua/',
   },
   projects: [
 
 
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      use: { ...devices['Pixel 7'], browserName: 'chromium', channel: 'chrome' },
     },
 
 
 
     {
       name: 'Google Chrome',
-      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+      use: { ...devices['Desktop Chrome'], browserName: 'chromium', channel: 'chrome' },
     },
   ],
 
