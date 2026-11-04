@@ -1,4 +1,4 @@
-import { test, expect } from '../fixtures/guest';
+import { test, expect } from '../fixtures/category';
 
 const HAIR = '20272';
 const MAKEUP = '2419';
@@ -11,6 +11,7 @@ async function expectPricesWithin(prices: () => Promise<number[]>, from?: number
   }).toBe(true);
 }
 
+test.describe('price filter on both layouts', { tag: ['@mobile', '@desktop'] }, () => {
 test('preset band filters visible product prices inclusively', async ({ visitCategory, page }) => {
   const category = await visitCategory(HAIR);
   await category.priceFilter.selectPreset(100, 250);
@@ -107,10 +108,9 @@ test('an extreme lower bound shows an empty result', async ({ visitCategory, pag
   await expect(page.locator('.CategoryPage__content')).toContainText('0 товарів');
   await expect(category.productGrid.cards).toHaveCount(0);
 });
+});
 
-test('mobile Apply closes the filter panel without losing the selection', async ({ visitCategory, page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'Mobile Chrome', 'Mobile filter panel only');
-
+test('mobile Apply closes the filter panel without losing the selection', { tag: '@mobile' }, async ({ visitCategory, page }) => {
   const category = await visitCategory(HAIR);
   await category.priceFilter.selectPreset(100, 250);
   await category.priceFilter.applyOnMobile();

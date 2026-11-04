@@ -1,16 +1,15 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 export class CookieBanner {
-  private readonly agreeButton;
+  private readonly agreeButton: Locator;
 
   constructor(page: Page) {
     this.agreeButton = page.getByRole('button', { name: 'Погоджуюсь' });
   }
 
-  async acceptIfPresent(): Promise<void> {
-    if (await this.agreeButton.isVisible()) {
-      await this.agreeButton.click();
-      await expect(this.agreeButton).toBeHidden();
-    }
+  async accept(): Promise<void> {
+    await expect(this.agreeButton).toBeVisible();
+    await this.agreeButton.click();
+    await expect(this.agreeButton).toBeHidden();
   }
 }

@@ -53,7 +53,7 @@
 ## Test design
 
 - Use a category page helper that accepts a category ID; place shared filter interactions in a price filter component or page object. Keep desktop and mobile entry/commit actions separate only where the UI differs.
-- Add a guest fixture that accepts cookies through the visible `Погоджуюсь` control when it appears, then confirms the banner is gone. Avoid relying on a hard-coded cookie value unless browser inspection shows it is necessary.
+- Use a Playwright setup project to accept cookies through the visible `Погоджуюсь` control and save `storageState`. Both browser projects depend on setup and start with that state; the category fixture only navigates.
 - Run the same core behavior tests in desktop Chrome and **mobile Chrome emulation**. Use a Chromium-based mobile device profile in Playwright; the current `iPhone 16 PRO Max` profile should be reviewed because iPhone profiles commonly target WebKit.
 - Prioritize: preset range, inclusive boundary, open-ended preset, custom range, clear, reload persistence, and one mobile Apply flow. Keep exploratory invalid-input behavior outside the core acceptance suite.
 - Assert user-visible filter state and relevant listing prices. Avoid fixed product counts or fixed product names because catalog data changes. Exclude unrelated banners and sponsored recommendation widgets from price assertions.
@@ -73,7 +73,7 @@
 
 ## Implementation sequence
 
-Follow the staged [implementation plan](./plan.md): correct the browser projects, add the guest cookie fixture, run and remove a temporary smoke test, then build the page/component objects and price tests.
+Follow the staged [implementation plan](./plan.md): configure Chrome projects, prepare guest cookie `storageState` through a setup dependency, and run the price tests after approval.
 
 The API is useful for exploration and optional test diagnostics, but core acceptance assertions should check the browser's visible filter state and product cards. Avoid asserting exact `total` values because inventory changes.
 

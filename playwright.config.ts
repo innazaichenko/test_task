@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { guestStorageState } from './support/storageState';
 
 export default defineConfig({
   testDir: './tests',
@@ -11,18 +12,27 @@ export default defineConfig({
     baseURL: 'https://makeup.com.ua/',
   },
   projects: [
+    {
+      name: 'setup',
+      testMatch: '**/*.setup.ts',
+      use: { ...devices['Desktop Chrome'], browserName: 'chromium', channel: 'chrome' },
+    },
 
 
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 7'], browserName: 'chromium', channel: 'chrome' },
+      dependencies: ['setup'],
+      grep: /@mobile/,
+      use: { ...devices['Pixel 7'], browserName: 'chromium', channel: 'chrome', storageState: guestStorageState },
     },
 
 
 
     {
       name: 'Google Chrome',
-      use: { ...devices['Desktop Chrome'], browserName: 'chromium', channel: 'chrome' },
+      dependencies: ['setup'],
+      grep: /@desktop/,
+      use: { ...devices['Desktop Chrome'], browserName: 'chromium', channel: 'chrome', storageState: guestStorageState },
     },
   ],
 
