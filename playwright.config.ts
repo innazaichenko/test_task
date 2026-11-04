@@ -6,7 +6,7 @@ export default defineConfig({
   fullyParallel: true,
   retries: 0,
   workers: 1,
-  reporter: 'html',
+  reporter: [['html', { outputFolder: 'playwright-report/desktop', open: 'never' }]],
   use: {
     trace: 'on-first-retry',
     baseURL: 'https://makeup.com.ua/',
@@ -20,16 +20,8 @@ export default defineConfig({
 
 
     {
-      name: 'Mobile Chrome',
-      dependencies: ['setup'],
-      grep: /@mobile/,
-      use: { ...devices['Pixel 7'], browserName: 'chromium', channel: 'chrome', storageState: guestStorageState },
-    },
-
-
-
-    {
-      name: 'Google Chrome',
+      name: 'filtering',
+      testMatch: '**/filtering/**/*.spec.ts',
       dependencies: ['setup'],
       grep: /@desktop/,
       use: { ...devices['Desktop Chrome'], browserName: 'chromium', channel: 'chrome', storageState: guestStorageState },

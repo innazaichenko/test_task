@@ -12,7 +12,7 @@
     "skipLibCheck": true
   },
   "include": [
-    "playwright.config.ts",
+    "playwright*.config.ts",
     "components/**/*.ts",
     "fixtures/**/*.ts",
     "pages/**/*.ts",

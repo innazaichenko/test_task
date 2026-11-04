@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test"
+    "test": "npm run test:desktop && npm run test:mobile",
+    "test:desktop": "playwright test --config=playwright.config.ts",
+    "test:mobile": "playwright test --config=playwright.mobile.config.ts"
   },
   "keywords": [],
   "author": "",

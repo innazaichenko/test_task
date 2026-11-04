@@ -1,5 +1,5 @@
-import { test, expect } from '../fixtures/category';
-import { PriceRanges } from '../components/filtersBlock/priceRanges';
+import { test, expect } from '../../fixtures/category';
+import { PriceRanges } from '../../components/filtersBlock/priceRanges';
 
 const HAIR = '20272';
 const MAKEUP = '2419';
