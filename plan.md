@@ -31,8 +31,10 @@ This plan implements the observed behavior and candidate cases in [specs.md](./s
 
 Use the Page Object Model with components as the main interaction layer:
 
-- `CategoryPage`: category navigation and access to its filter and product grid.
-- `PriceFilter`: preset selection, From/To entry and blur, active-state reading, mobile panel open/Apply, and layout-specific clear actions.
+- `CategoryPage`: category navigation and access to `Filters` and the product grid.
+- `Filters`: owns the reusable `FiltersBlock` and the filter components available to a category, starting with `price`.
+- `FiltersBlock`: shared filter panel, mobile open/Apply, and layout-specific clear actions.
+- `PriceFilter`: preset selection from `PriceRanges`, From/To entry, and active-state reading.
 - `ProductGrid`: product-card selection and parsing of displayed current prices; exclude promotional action cards.
 - `CookieBanner`: guest consent interaction, called only by the setup project.
 

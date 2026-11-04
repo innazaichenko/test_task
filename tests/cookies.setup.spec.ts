@@ -1,7 +1,7 @@
 import { mkdir } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { test } from '@playwright/test';
-import { CookieBanner } from '../components/CookieBanner';
+import { CookieBanner } from '../components/cookieBanner';
 import { guestStorageState } from '../support/storageState';
 
 test('accept cookies for guest projects', async ({ page, context }) => {

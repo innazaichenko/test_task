@@ -52,7 +52,7 @@
 
 ## Test design
 
-- Use a category page helper that accepts a category ID; place shared filter interactions in a price filter component or page object. Keep desktop and mobile entry/commit actions separate only where the UI differs.
+- Use a category page helper that accepts a category ID. `CategoryPage.filters` owns a reusable `FiltersBlock` and category-specific components such as `price`; `PriceRanges` names the stable preset labels. Keep desktop and mobile panel actions in `FiltersBlock`.
 - Use a Playwright setup project to accept cookies through the visible `Погоджуюсь` control and save `storageState`. Both browser projects depend on setup and start with that state; the category fixture only navigates.
 - Run the same core behavior tests in desktop Chrome and **mobile Chrome emulation**. Use a Chromium-based mobile device profile in Playwright; the current `iPhone 16 PRO Max` profile should be reviewed because iPhone profiles commonly target WebKit.
 - Prioritize: preset range, inclusive boundary, open-ended preset, custom range, clear, reload persistence, and one mobile Apply flow. Keep exploratory invalid-input behavior outside the core acceptance suite.
@@ -61,7 +61,7 @@
 
 ## Candidate test cases
 
-1. **Preset band:** choose 100–250 ₴; expect both inputs and URL bounds to match; wait for product results; check every visible product card's current price is between 100 and 250 ₴, inclusively. Run on both browser projects.
+1. **Preset band:** choose 750–1000 ₴; expect both inputs and URL bounds to match; wait for product results; check every visible product card's current price is between 750 and 1000 ₴, inclusively. Run on both browser projects.
 2. **Open-ended range:** choose Below 50 ₴ or Above 5000 ₴; expect one input blank and the corresponding single hash bound; check returned product prices if products exist.
 3. **Custom range:** enter two valid values and blur each field; expect the displayed bounds and result prices to match.
 4. **Persistence:** apply a valid range, reload, and wait for the bounds and filtered results to reappear.

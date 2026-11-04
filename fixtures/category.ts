@@ -1,5 +1,5 @@
 import { test as base, expect } from '@playwright/test';
-import { CategoryPage } from '../pages/CategoryPage';
+import { CategoryPage } from '../pages/categoryPage';
 
 type CategoryFixtures = {
   visitCategory: (categoryId: string) => Promise<CategoryPage>;

@@ -14,7 +14,7 @@ export default defineConfig({
   projects: [
     {
       name: 'setup',
-      testMatch: '**/*.setup.ts',
+      testMatch: '**/*.setup.spec.ts',
       use: { ...devices['Desktop Chrome'], browserName: 'chromium', channel: 'chrome' },
     },
 
