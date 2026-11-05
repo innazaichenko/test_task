@@ -4,7 +4,7 @@ export class ProductGrid {
   readonly cards: Locator;
 
   constructor(page: Page) {
-    this.cards = page.locator('.Products__cards .ProductCard__card');
+    this.cards = page.locator('.Products__cards > .ProductCard__cardContainer > .ProductCard__card');
   }
 
   async currentPrices(): Promise<number[]> {

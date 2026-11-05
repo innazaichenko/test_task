@@ -3,6 +3,7 @@ import { expect, type Locator, type Page } from '@playwright/test';
 export class FiltersBlock {
   readonly root: Locator;
   readonly content: Locator;
+  readonly appliedTags: Locator;
   private readonly mobileOpenButton: Locator;
   private readonly mobileApplyButton: Locator;
   private readonly mobileClearButton: Locator;
@@ -11,6 +12,7 @@ export class FiltersBlock {
   constructor(private readonly page: Page) {
     this.root = page.locator('.Filters__filters');
     this.content = this.root.locator('.Filters__filtersContent');
+    this.appliedTags = page.locator('.Tags__tags .Tag__tag');
     this.mobileOpenButton = page.locator('button.FilterSortingControls__button').filter({ hasText: 'Фільтр' });
     this.mobileApplyButton = this.root.locator('.Filters__buttons button').filter({ hasText: 'Застосувати' });
     this.mobileClearButton = this.root.locator('.Filters__buttons button').filter({ hasText: 'Очистити' });
