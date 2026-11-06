@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import type { FiltersBlock } from '../components/filtersBlock/filtersBlock';
 
 type ApiProduct = {
   type?: unknown;
@@ -10,10 +11,13 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 export class ProductService {
-  constructor(private readonly page: Page) {}
+  constructor(
+    private readonly page: Page,
+    private readonly filtersBlock: FiltersBlock,
+  ) {}
 
   async waitForFilteredProductPrices(categoryId: string, from: string, to: string): Promise<number[]> {
-    const response = await this.page.waitForResponse((candidate) => {
+    const responsePromise = this.page.waitForResponse((candidate) => {
       const url = new URL(candidate.url());
       return candidate.request().method() === 'GET' &&
         candidate.status() === 200 &&
@@ -21,6 +25,8 @@ export class ProductService {
         url.searchParams.get('priceFrom') === (from || null) &&
         url.searchParams.get('priceTo') === (to || null);
     });
+    await this.filtersBlock.waitUntilInteractive();
+    const response = await responsePromise;
     const body: unknown = await response.json();
 
     if (!isRecord(body) || !Array.isArray(body.products)) {

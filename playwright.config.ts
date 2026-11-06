@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 import { guestStorageState } from './support/storageState';
 
+const desktopViewport = { width: 1920, height: 1080 };
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -10,12 +12,13 @@ export default defineConfig({
   use: {
     trace: 'on-first-retry',
     baseURL: 'https://makeup.com.ua/',
+    headless: true,
   },
   projects: [
     {
       name: 'setup',
       testMatch: '**/*.setup.spec.ts',
-      use: { ...devices['Desktop Chrome'], browserName: 'chromium', channel: 'chrome' },
+      use: { ...devices['Desktop Chrome'], browserName: 'chromium', channel: 'chrome', viewport: desktopViewport },
     },
 
 
@@ -24,7 +27,7 @@ export default defineConfig({
       testMatch: '**/filtering/**/*.spec.ts',
       dependencies: ['setup'],
       grep: /@desktop/,
-      use: { ...devices['Desktop Chrome'], browserName: 'chromium', channel: 'chrome', storageState: guestStorageState },
+      use: { ...devices['Desktop Chrome'], browserName: 'chromium', channel: 'chrome', viewport: desktopViewport, storageState: guestStorageState },
     },
   ],
 

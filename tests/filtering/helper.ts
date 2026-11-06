@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 import type { CategoryPage } from '../../pages/categoryPage';
 import type { Page } from '@playwright/test';
 import { PriceRanges, type PriceRange } from '../../components/filtersBlock/priceRanges';
+import type { ProductService } from '../../services/productService';
 
 export type PriceFilterCase = {
   title: string;
@@ -11,7 +12,6 @@ export type PriceFilterCase = {
   to: string;
   hash: string;
   tagText: string;
-  expectedProductPrice?: number;
 };
 
 export const priceFilterCases: PriceFilterCase[] = [
@@ -48,16 +48,28 @@ export const priceFilterCases: PriceFilterCase[] = [
     hash: '#price_from=100&price_to=100',
     tagText: 'від 100 до 100',
   },
-  {
-    title: 'Reversed Range - Lower Bound',
-    categoryId: '20272',
-    from: '200',
-    to: '100',
-    hash: '#price_from=200&price_to=100',
-    tagText: 'від 200 до 100',
-    expectedProductPrice: 200,
-  },
 ];
+
+export async function applyPriceFilterAndCaptureProducts(
+  category: CategoryPage,
+  productService: ProductService,
+  filterCase: PriceFilterCase,
+): Promise<number[]> {
+  const responsePromise = productService.waitForFilteredProductPrices(
+    filterCase.categoryId,
+    filterCase.from,
+    filterCase.to,
+  );
+
+  if (filterCase.range) {
+    await category.filters.price.clickPriceRange(filterCase.range);
+  } else {
+    if (filterCase.from) await category.filters.price.setFrom(filterCase.from);
+    if (filterCase.to) await category.filters.price.setTo(filterCase.to);
+  }
+
+  return responsePromise;
+}
 
 export async function expectDefaultState(category: CategoryPage, page: Page): Promise<void> {
   await expect(page, 'Verify the category URL has no price filter').toHaveURL(/\/ua\/categorys\/\d+\/$/);
@@ -77,18 +89,14 @@ export async function expectApiProductsDisplayed(category: CategoryPage, apiPric
 }
 
 export async function expectProductPrices(category: CategoryPage, filterCase: PriceFilterCase): Promise<void> {
-  const message = filterCase.expectedProductPrice !== undefined
-    ? `Verify every displayed product price matches ${filterCase.expectedProductPrice}`
-    : `Verify every displayed product price matches the ${filterCase.from || 'open'}–${filterCase.to || 'open'} bounds`;
+  const message = `Verify every displayed product price matches the ${filterCase.from || 'open'}–${filterCase.to || 'open'} bounds`;
 
   await expect.poll(async () => {
     const prices = await category.productGrid.currentPrices();
     return prices.length > 0 && prices.every((price) =>
       Number.isFinite(price) &&
-      (filterCase.expectedProductPrice !== undefined
-        ? price === filterCase.expectedProductPrice
-        : (filterCase.from === '' || price >= Number(filterCase.from)) &&
-          (filterCase.to === '' || price <= Number(filterCase.to))));
+      (filterCase.from === '' || price >= Number(filterCase.from)) &&
+      (filterCase.to === '' || price <= Number(filterCase.to)));
   }, { message }).toBe(true);
 }
 

@@ -5,7 +5,7 @@ export class FiltersBlock {
   readonly content: Locator;
   readonly appliedTags: Locator;
   private readonly mobileOpenButton: Locator;
-  private readonly mobileApplyButton: Locator;
+  readonly mobileApplyButton: Locator;
   private readonly mobileClearButton: Locator;
   private readonly desktopClearButton: Locator;
 
@@ -20,7 +20,6 @@ export class FiltersBlock {
   }
 
   async waitUntilInteractive(): Promise<void> {
-    // The site renders filter markup before React attaches event handlers.
     await this.page.waitForFunction(() => {
       const block = document.querySelector('.Filters__filters');
       return block && Object.keys(block).some((key) => key.startsWith('__reactFiber$'));
@@ -28,6 +27,7 @@ export class FiltersBlock {
   }
 
   async open(): Promise<void> {
+    await this.waitUntilInteractive();
     if (await this.mobileOpenButton.isVisible() &&
         !(await this.root.getAttribute('class'))?.includes('Filters__isFilterShow')) {
       await this.mobileOpenButton.click();
