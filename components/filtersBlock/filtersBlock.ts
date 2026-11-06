@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
+import { defaultLocale, type Locale } from '../../utils/locales';
 
 export class FiltersBlock {
   readonly root: Locator;
@@ -9,13 +10,13 @@ export class FiltersBlock {
   private readonly mobileClearButton: Locator;
   private readonly desktopClearButton: Locator;
 
-  constructor(private readonly page: Page) {
+  constructor(private readonly page: Page, locale: Locale = defaultLocale) {
     this.root = page.locator('.Filters__filters');
     this.content = this.root.locator('.Filters__filtersContent');
     this.appliedTags = page.locator('.Tags__tags .Tag__tag');
-    this.mobileOpenButton = page.locator('button.FilterSortingControls__button').filter({ hasText: 'Фільтр' });
-    this.mobileApplyButton = this.root.locator('.Filters__buttons button').filter({ hasText: 'Застосувати' });
-    this.mobileClearButton = this.root.locator('.Filters__buttons button').filter({ hasText: 'Очистити' });
+    this.mobileOpenButton = page.locator('button.FilterSortingControls__button').filter({ hasText: locale.filters.mobileOpen });
+    this.mobileApplyButton = this.root.locator('.Filters__buttons button').filter({ hasText: locale.filters.mobileApply });
+    this.mobileClearButton = this.root.locator('.Filters__buttons button').filter({ hasText: locale.filters.mobileClear });
     this.desktopClearButton = page.locator('button.Tags__clear');
   }
 

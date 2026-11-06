@@ -80,3 +80,28 @@ The API is useful for exploration and optional test diagnostics, but core accept
 ## Evidence still needed
 
 The live DOM and API responses have been inspected. Remaining evidence is needed for intended invalid-input behavior, clear behavior when another filter is active, and confirmation under the configured mobile Chrome browser project.
+
+## Implementation completed
+
+The repository now contains the Playwright implementation described by this specification:
+
+- Desktop Chrome and emulated mobile Chrome are configured as separate Playwright runs. The mobile project uses the Chromium `Pixel 7` profile so the mobile filter layout is exercised by Chromium-based Chrome emulation.
+- A setup project accepts the guest cookie banner and saves reusable state to `playwright/.auth/guest.json`. The filtering projects depend on setup and start with that state.
+- The test suite uses reusable page objects and components for category navigation, filters, price ranges, product cards, and cookie consent. Category IDs remain data-driven, with hair (`20272`) and makeup (`2419`) represented in the cases.
+- User-facing labels used by page objects and locators are centralized in `utils/locales.ts`. Ukrainian is the default locale, while `CategoryPage`, `Filters`, `FiltersBlock`, and `CookieBanner` accept an optional locale through their constructors.
+- The implemented behavior covers preset ranges, open-ended and equal bounds, API-to-UI price consistency, inclusive price assertions, applied filter tags, clearing, and the mobile Apply interaction.
+- The repository includes npm scripts for the desktop run, mobile run, and combined run. Generated reports and authentication state are excluded from version control.
+
+## Assumptions used by the implementation
+
+- The makeup site is the external system under test and its live catalog is mutable. Tests therefore avoid fixed product IDs, product names, exact totals, and fixed result counts.
+- A product's displayed current price is the assertion value. Promotional action cards are excluded, and an old/reference price is not used for range validation.
+- Price bounds are inclusive, based on the observed API and UI behavior. A value entered in either custom field is committed by blurring the field (implemented with Tab).
+- Cookie acceptance is a test precondition rather than behavior under test, so it is performed once by the setup project.
+- Reversed, nonnumeric, negative, and other invalid values are exploratory questions and are intentionally not acceptance criteria until product behavior is clarified.
+- The site selectors and Ukrainian labels were taken from the inspected live DOM. They may need maintenance if the external site's markup or translations change.
+- Locale is treated as a stable page-object dependency, so constructor injection is used for page objects and components. One-off price-range lookups can instead use the locale-aware `priceRanges(locale)` helper.
+
+## Agent involvement
+
+The implementation and documentation were completed in the current Codex agent session. The agent inspected the existing specification, plan, Playwright configuration, fixtures, page objects, components, services, and tests; then implemented the locale abstraction and updated the repository documentation. No delegated sub-agent or external human contributor was used for this work. The live-site observations recorded earlier in this document remain the evidence basis for the assumptions above.
